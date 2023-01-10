@@ -5,10 +5,10 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        {/* <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
-        </p>
+        </p> */}
         <a
           className="App-link"
           href="https://reactjs.org"
@@ -17,7 +17,7 @@ function App() {
         >
           Learn React GIT up1111ss
 
-          <code>
+          <pre>
           #！/bash/sh
           cd /home/nginx/www/web
           if [ -d "build/" ];then
@@ -45,7 +45,7 @@ function App() {
           tar -zcvf build-origin.tar.gz build
           # scp build-origin.zip root@101.35.190.75:/home/nginx/www/web
 
-          </code>
+          </pre>
         </a>
       </header>
     </div>
