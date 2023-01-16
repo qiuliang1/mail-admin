@@ -1,15 +1,21 @@
 pipeline {
     agent any
+    parameters {
 
+    }
+    options {
+        timestamps()
+        timeout(5)
+    }
     stages {
+        // stage('Git') {
+        //     step {
+
+        //     }
+        // }
         stage('Build') {
             steps {
-                echo 'Building..'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
+                sh 'npm run build'
             }
         }
         stage('Deploy') {
