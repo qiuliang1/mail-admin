@@ -1,8 +1,8 @@
 pipeline {
     agent any
-    parameters {
+    // parameters {
 
-    }
+    // }
     options {
         timestamps()
         timeout(5)
