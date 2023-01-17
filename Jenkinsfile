@@ -39,8 +39,13 @@ pipeline {
                                 cleanRemote: false, 
                                 excludes: '', 
                                 execCommand: """
-                                    set -x  
-                                    echo "代码逻辑块..."
+                                    cd /home/nginx/www/reactCi
+                                    if [ -d "build/" ];then
+                                        echo "文件夹存在"
+                                        tar -zcvf old-build.tar.gz build
+                                        rm -rf build
+                                    fi
+                                    tar -zxvf build-origin.tar.gz
                                 """, 
                                 execTimeout: 0, 
                                 flatten: false, 
