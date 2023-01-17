@@ -47,10 +47,10 @@ pipeline {
                                 makeEmptyDirs: false, 
                                 noDefaultExcludes: false, 
                                 patternSeparator: '[, ]+', 
-                                remoteDirectory: "/home/nginx/www/web",
+                                remoteDirectory: "/home/nginx/www/reactCi",
                                 remoteDirectorySDF: false,
                                 removePrefix: "", 
-                                sourceFiles: "./build-origin.tar.gz"
+                                sourceFiles: "build-origin.tar.gz"
                                 )
                             ],
                             usePromotionTimestamp: false, 
