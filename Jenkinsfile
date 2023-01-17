@@ -68,17 +68,14 @@ pipeline {
         }
         // stage('Deploy') {
         //     agent none
-        //     // steps {
-        //     //     sh 'scp -P 11002 build-origin.tar.gz root@223.112.158.210:/home/nginx/www/web'
-        //     // }
         //     steps {
         //         script {
         //             def remote = [:]
         //             remote.name = '101.35'
-        //             remote.host = '101.35.190.75'
+        //             remote.host = '101'
         //             remote.port = 11002
         //             remote.user = 'root'
-        //             remote.password = 'Qiul@2023#'
+        //             remote.password = ''
         //             remote.allowAnyHosts = true
         //             stage('Remote SSH') {
         //                 sshCommand remote: remote, command: "cd /home/nginx"

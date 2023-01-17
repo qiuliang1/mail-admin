@@ -15,9 +15,11 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React GIT1112
+          Learn React GIT1112最新
 
-          <pre>
+          
+        </a>
+        <pre>
           #！/bash/sh
           cd /home/nginx/www/web
           if [ -d "build/" ];then
@@ -46,7 +48,6 @@ function App() {
           # scp build-origin.zip root@101.35.190.75:/home/nginx/www/web
 
           </pre>
-        </a>
       </header>
     </div>
   );
