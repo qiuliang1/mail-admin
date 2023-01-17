@@ -24,7 +24,38 @@ pipeline {
                 sh 'npm install'
                 sh 'npm run build'
                 sh 'tar -zcvf build-origin.tar.gz build'
-                sh 'scp -P 11002 build-origin.tar.gz root@223.112.158.210:/home/nginx/www/web'
+                // sh 'scp -P 11002 build-origin.tar.gz root@223.112.158.210:/home/nginx/www/web'
+            }
+            steps {
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'self server', 
+                            transfers: [
+                                sshTransfer(
+                                cleanRemote: false, 
+                                excludes: '', 
+                                execCommand: """
+                                    set -x  
+                                    echo "代码逻辑块..."
+                                """, 
+                                execTimeout: 0, 
+                                flatten: false, 
+                                makeEmptyDirs: false, 
+                                noDefaultExcludes: false, 
+                                patternSeparator: '[, ]+', 
+                                remoteDirectory: "/home/nginx/www/web",
+                                remoteDirectorySDF: false,
+                                removePrefix: "", 
+                                sourceFiles: "./build-origin.tar.gz"
+                                )
+                            ],
+                            usePromotionTimestamp: false, 
+                            useWorkspaceInPromotion: false, 
+                            verbose: true
+                        )
+                    ]
+                )
             }
         }
         // stage('Deploy') {
