@@ -39,7 +39,7 @@ pipeline {
                                 cleanRemote: false, 
                                 excludes: '', 
                                 execCommand: """
-                                    cd /home/nginx/www/reactCi
+                                    cd /home/nginx/res/reactCi
                                     if [ -d "build/" ];then
                                         echo "文件夹存在"
                                         tar -zcvf old-build.tar.gz build
@@ -52,7 +52,7 @@ pipeline {
                                 makeEmptyDirs: false, 
                                 noDefaultExcludes: false, 
                                 patternSeparator: '[, ]+', 
-                                remoteDirectory: "/home/nginx/www/reactCi",
+                                remoteDirectory: "/home/nginx/res/reactCi",
                                 remoteDirectorySDF: false,
                                 removePrefix: "", 
                                 sourceFiles: "build-origin.tar.gz"
