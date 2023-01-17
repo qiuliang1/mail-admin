@@ -26,6 +26,9 @@ pipeline {
                 sh 'tar -zcvf build-origin.tar.gz build'
                 // sh 'scp -P 11002 build-origin.tar.gz root@223.112.158.210:/home/nginx/www/web'
             }
+            
+        }
+        stage('Push') {
             steps {
                 sshPublisher(
                     publishers: [
