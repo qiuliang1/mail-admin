@@ -21,14 +21,14 @@ pipeline {
         // }
         stage('Build') {
             steps {
-                sh 'npm install'
+                // sh 'npm install'
                 sh 'npm run build'
                 sh 'tar -zcvf build-origin.tar.gz build'
                 // sh 'scp -P 11002 build-origin.tar.gz root@223.112.158.210:/home/nginx/www/web'
             }
             
         }
-        stage('Push') {
+        stage('Push&Dev') {
             steps {
                 sshPublisher(
                     publishers: [
