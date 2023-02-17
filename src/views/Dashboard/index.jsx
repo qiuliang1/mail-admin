@@ -4,7 +4,7 @@ import {Button} from 'antd'
 function DashboardRender () {
     return (
         <div>
-            <Button>Dashboard</Button>
+            <Button type="primary">Dashboard</Button>
         </div>
     )
 }

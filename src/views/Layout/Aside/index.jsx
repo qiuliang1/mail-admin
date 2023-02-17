@@ -1,26 +1,24 @@
-import React, {useState, useEffect} from "react";
-import {
-  LaptopOutlined,
-  NotificationOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import { useLocation, useNavigate } from "react-router-dom"
+import React, { useState, useEffect, useContext } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import menuList from "@/router/menuConfig";
 import { Layout, Menu, theme } from "antd";
+import MenuTypeContext from "../context";
+import {GetSettingFn} from "@/utils/recoil-get"
+import LogoImg from "@/assets/images/logo.png";
 
 function AsideRender() {
-    const [menuExpend, setMenuExpend] = useState([])
+  const [menuExpend, setMenuExpend] = useState([]);
   const {
-    token: { boxShadowTabsOverflowTop, colorBgBase },
+    token: { boxShadowTabsOverflowTop },
   } = theme.useToken();
-  
-  const {pathname} = useLocation()
-  const navigate = useNavigate()
-  console.log("[ theme.useToken() ] >", theme.useToken(), pathname);
+  const { menuType, menuColor, menuWidth } = useContext(MenuTypeContext);
 
-//   useEffect(() => {
-//     getExpend(menuList)
-//   }, [])
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  //   useEffect(() => {
+  //     getExpend(menuList)
+  //   }, [])
 
   const items = (menuList) => {
     if (menuList && menuList.length) {
@@ -38,49 +36,41 @@ function AsideRender() {
     }
   };
   const getExpend = (menulist) => {
-    let menuEx = []
+    let menuEx = [];
     function node(list) {
-        if (list && list.length) {
-            list.map((menu) => {
-              if(pathname.includes(menu.path)) {
-                  menuEx = [...menuEx, menu.path]
-              }
-              node(menu.children)
-            });
-          } else {
-            return undefined; 
+      if (list && list.length) {
+        list.map((menu) => {
+          if (pathname.includes(menu.path)) {
+            menuEx = [...menuEx, menu.path];
           }
+          node(menu.children);
+        });
+      } else {
+        return undefined;
+      }
     }
-    node(menulist)
+    node(menulist);
     // setMenuExpend(menuEx)
-    return menuEx
-  }
+    return menuEx;
+  };
 
   const handleMenuSelect = (menu) => {
-    console.log("[ menu ] >", menu);
-    navigate(menu.key)
+    navigate(menu.key);
   };
 
   return (
-    <Layout.Sider
-      style={{
-        background: boxShadowTabsOverflowTop
-      }}
-      width={200}
-    >
-      <div className="logo-icon">
-        Logo
-      </div>
+    <Layout.Sider className="qg-layout-sidebar" collapsed={GetSettingFn("menuSetting.collapsed")} width={menuWidth}>
+      {menuType === "sidebar" && (
+        <div className={`qg-logo-icon ${menuColor === "#ffffff" ? "" : "qg-logo-icon-dark"}`}>
+          <img src={LogoImg} alt="" /> {GetSettingFn("menuSetting.collapsed") ? "" : "Yun Chuang"}
+        </div>
+      )}
       <Menu
         mode="inline"
-        theme="dark"
+        theme={menuColor === "#ffffff" ? "light" : "dark"}
         defaultSelectedKeys={[pathname]}
         defaultOpenKeys={getExpend(menuList)}
         onClick={handleMenuSelect}
-        style={{
-          background: "transparent",
-          color: colorBgBase,
-        }}
         items={items(menuList)}
       />
     </Layout.Sider>
