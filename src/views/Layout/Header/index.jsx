@@ -5,26 +5,50 @@ import {
   BellOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import { Layout, Breadcrumb, theme, Menu, Avatar } from "antd";
+import { Layout, Breadcrumb, Menu, Avatar, Dropdown } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import menuList from "@/router/menuConfig";
 import Setting from "./setting";
-import { useRecoilState } from "recoil";
-import { projectSetting } from "@/store/setting.recoil";
-import {GetSettingFn} from "@/utils/recoil-get"
+import { useSystem } from "@/store/system";
+import { useUser } from "@/store/user";
 import MenuTypeContext from "../context";
 import LogoImg from "@/assets/images/logo.png";
 
 function AsideRender() {
   const [drawshow, setDrawshow] = useState(false);
   const { menuType, headColor, menuWidth } = useContext(MenuTypeContext);
-  const [proSetting, setProSetting] = useRecoilState(projectSetting);
+  const menuMode = useSystem((state) => state.setSystemProperty);
+  const collapsed = useSystem((state) => state.menuSetting.collapsed);
+  const logoutApi = useUser(state => state.logout)
   const { pathname } = useLocation();
   const navigate = useNavigate();
   // const menuType = useRecoilValue(getSettingValue("menuSetting.type"));
 
-  useEffect(() => {
-  }, [headColor]);
+
+
+  useEffect(() => {}, [headColor]);
+
+  const logout = async () => {
+    const {data} = await logoutApi()
+    if(data) {
+      navigate('/login')
+    }
+  }
+
+  const dropMenu = [
+    {
+      key: "1",
+      label: <span>首页</span>,
+    },
+    {
+      key: "2",
+      label: <span>修改密码</span>,
+    },
+    {
+      key: "3",
+      label: <span onClick={logout}>退出登陆</span>,
+    },
+  ];
 
   const items = (menuList) => {
     if (menuList && menuList.length) {
@@ -48,10 +72,8 @@ function AsideRender() {
   };
 
   const collapsedControl = () => {
-    const collapsed = proSetting.menuSetting.collapsed
-    const menuSetting = {...proSetting.menuSetting, collapsed: !collapsed}
-    setProSetting({...proSetting, menuSetting})
-  }
+    menuMode("menuSetting.collapsed", !collapsed);
+  };
 
   return (
     <Layout.Header
@@ -63,13 +85,19 @@ function AsideRender() {
     >
       <div className="flex">
         {menuType !== "sidebar" && (
-          <div className="px-2 cursor-pointer qg-layout-header_item qg-logo-icon" style={{width: `${menuWidth}px`}}>
+          <div
+            className="px-2 cursor-pointer qg-layout-header_item qg-logo-icon"
+            style={{ width: `${menuWidth}px` }}
+          >
             <img src={LogoImg} alt="" /> Yun Chuang
           </div>
         )}
         {menuType !== "top-menu" && (
-          <div className="qg-layout-header_item px-2 cursor-pointer" onClick={() => collapsedControl()}>
-            {proSetting.menuSetting.collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          <div
+            className="qg-layout-header_item px-2 cursor-pointer"
+            onClick={() => collapsedControl()}
+          >
+            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </div>
         )}
         {menuType !== "top-menu" && (
@@ -96,10 +124,13 @@ function AsideRender() {
         <span className="px-2 qg-layout-header_item cursor-pointer">
           <BellOutlined />
         </span>
-        <div className="px-2 qg-layout-header_item cursor-pointer leading-[44px]">
-          <Avatar size="small">Tom</Avatar>
-          <span className="ml-2 text-sm">userName</span>
-        </div>
+        <Dropdown menu={{ items: dropMenu }}>
+          <div className="px-2 qg-layout-header_item cursor-pointer leading-[44px]">
+            <Avatar size="small">Tom</Avatar>
+            <span className="ml-2 text-sm">userName</span>
+          </div>
+        </Dropdown>
+
         <span
           className="px-2 qg-layout-header_item cursor-pointer"
           onClick={() => setDrawshow(true)}

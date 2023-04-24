@@ -1,9 +1,8 @@
 import React from "react";
-import { Route, Routes, Redirect } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import Login from "../views/login";
 import Layout from "@/views/Layout";
-import Dashboard from "@/views/Dashboard";
 
 function RouterRender(params) {
 

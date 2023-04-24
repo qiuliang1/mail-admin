@@ -1,0 +1,72 @@
+@src: "~@/assets/";
+@screenLg: 1200px;
+@screenMd: 992px;
+@screenSm: 768px;
+@screenXs: 576px;
+@screenList: screenLg, screenMd, screenSm, screenXs;
+
+.qg-login {
+  min-height: 100%;
+  overflow: hidden;
+
+  @media screen {
+    @media (min-width: 1280px) {
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        margin-left: -48%;
+        background-image: url("@{src}svg/login-bg.svg");
+        background-position: 100%;
+        background-repeat: no-repeat;
+        background-size: auto 100%;
+      }
+    }
+
+    @media (max-width: 1280px) {
+      & {
+        background-color: #293146;
+      }
+    }
+  }
+  .qg-app-logo {
+    width: 60%;
+    height: 80px;
+    position: absolute;
+    top: 12px;
+    align-items: center;
+    padding-left: 7px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 28px;
+    color: #fff;
+    font-weight: bold;
+    img {
+      width: 70px;
+    }
+
+    .my-auto {
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+  }
+
+  .qg-login-form  {
+    background-color: #fff;
+  }
+
+  .screenLoop(@count) when (@count < length(@screenList) + 1) {
+    @media (min-width: extract(@screenList,@count)) {
+      .container {
+        min-width: extract(@screenList, @count);
+      }
+    }
+    .screenLoop(@count + 1);
+  }
+  @media screen {
+    .screenLoop(1);
+  }
+}

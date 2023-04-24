@@ -4,21 +4,23 @@ import DocumentTitle from "react-document-title";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { Layout } from "antd";
 import NotFount from "@/views/404";
-import menuList from "@/router/menuConfig";
+import { useSystem } from "@/store/system";
+// import menuList from "@/router/menuConfig";
 import routeList from "@/config/routeMap";
 import { getMenuItemInMenuListByProperty } from "@/utils";
 
 const getPageTitle = (menuList, pathname) => {
-  let title = "综合防灾系统";
+  let title = "云创商城后台管理系统";
   let item = getMenuItemInMenuListByProperty(menuList, "path", pathname);
   if (item) {
-    title = `${item.title}`;
+    title = `${item.name}`;
   }
   return title;
 };
 
 function Content() {
   const location = useLocation();
+  const menuList = useSystem((state) => state.menuList);
   const { pathname } = location;
   // const handleFilter = (route) => {
   //   // 过滤没有权限的页面
@@ -29,7 +31,7 @@ function Content() {
   return (
     <DocumentTitle title={getPageTitle(menuList, pathname)}>
       <Layout.Content className="m-4">
-        <TransitionGroup>
+        <TransitionGroup className="w-full h-full">
           <CSSTransition
             key={pathname}
             timeout={500}

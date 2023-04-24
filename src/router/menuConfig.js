@@ -41,6 +41,23 @@ const menuList = [
             }
         ]
     },
+    {
+        title: "权限",
+        lanageKey: "public.home",
+        path: "/ums",
+        icon: "order",
+        roles: ["admin", "editor", "guest"],
+        children: [
+            {
+                title: "权限列表",
+                path: "/ums/permission",
+            },
+            {
+                title: "用户列表",
+                path: "/order/account",
+            }
+        ]
+    },
 ]
 
 export default menuList

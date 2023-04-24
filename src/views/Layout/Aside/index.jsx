@@ -1,32 +1,66 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import menuList from "@/router/menuConfig";
-import { Layout, Menu, theme } from "antd";
+import { Layout, Menu } from "antd";
 import MenuTypeContext from "../context";
-import {GetSettingFn} from "@/utils/recoil-get"
+import { useSystem } from "@/store/system";
+import { userTree, authTree } from "@/api/ums";
+import { getCookie } from "@/utils/cookie"
 import LogoImg from "@/assets/images/logo.png";
 
 function AsideRender() {
-  const [menuExpend, setMenuExpend] = useState([]);
-  const {
-    token: { boxShadowTabsOverflowTop },
-  } = theme.useToken();
   const { menuType, menuColor, menuWidth } = useContext(MenuTypeContext);
 
   const { pathname } = useLocation();
+  console.log("[ pathname ] >", pathname);
+  const pathName = pathname === "/" ? "/dashboard" : pathname;
   const navigate = useNavigate();
 
-  //   useEffect(() => {
-  //     getExpend(menuList)
-  //   }, [])
+  const {menuSetting:{collapsed}, menuList} = useSystem((state) => state);
+  const setMenuList = useSystem(state => state.setMenuList)
+
+  useEffect(() => {
+    // getExpend(menuList)
+    getMenuList();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getToken = () => {
+    const token = localStorage.getItem("authToken") // getCookie("authToken");
+    return token
+  }
+
+  const getMenuList = async () => {
+    if(!getToken()) {
+      navigate('login')
+      return
+    }
+    const { data: userTre } = await userTree({sysType: ""});
+    console.log('[ userTre ] >', userTre)
+    const { data } = await authTree({sysType: ""});
+    const menus = await setFilterMenu(data);
+    setMenuList(menus)
+  };
+
+  const setFilterMenu = async (list) => {
+    const listMenu = list[0].children;
+    const deepFilter = (listMe) => {
+      if (Array.isArray(listMe)) {
+        return listMe.filter((v) => {
+          v.children = deepFilter(v.children);
+          return v.type === 'Function';
+        });
+      }
+    };
+    return deepFilter(listMenu);
+  };
 
   const items = (menuList) => {
     if (menuList && menuList.length) {
       return menuList.map((menu) => {
         return {
           key: menu.path,
-          icon: "",
-          label: menu.title,
+          icon: menu.icon,
+          label: menu.name,
           path: menu.path,
           children: items(menu.children),
         };
@@ -39,9 +73,9 @@ function AsideRender() {
     let menuEx = [];
     function node(list) {
       if (list && list.length) {
-        list.map((menu) => {
-          if (pathname.includes(menu.path)) {
-            menuEx = [...menuEx, menu.path];
+        list.forEach((menu) => {
+          if (pathname.includes(menu?.path)) {
+            menuEx = [...menuEx, menu?.path];
           }
           node(menu.children);
         });
@@ -59,16 +93,24 @@ function AsideRender() {
   };
 
   return (
-    <Layout.Sider className="qg-layout-sidebar" collapsed={GetSettingFn("menuSetting.collapsed")} width={menuWidth}>
+    <Layout.Sider
+      className="qg-layout-sidebar"
+      collapsed={collapsed}
+      width={menuWidth}
+    >
       {menuType === "sidebar" && (
-        <div className={`qg-logo-icon ${menuColor === "#ffffff" ? "" : "qg-logo-icon-dark"}`}>
-          <img src={LogoImg} alt="" /> {GetSettingFn("menuSetting.collapsed") ? "" : "Yun Chuang"}
+        <div
+          className={`qg-logo-icon ${
+            menuColor === "#ffffff" ? "" : "qg-logo-icon-dark"
+          }`}
+        >
+          <img src={LogoImg} alt="" /> {collapsed ? "" : "Yun Chuang"}
         </div>
       )}
       <Menu
         mode="inline"
         theme={menuColor === "#ffffff" ? "light" : "dark"}
-        defaultSelectedKeys={[pathname]}
+        defaultSelectedKeys={[pathName]}
         defaultOpenKeys={getExpend(menuList)}
         onClick={handleMenuSelect}
         items={items(menuList)}

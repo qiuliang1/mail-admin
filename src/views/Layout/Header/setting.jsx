@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Drawer, Divider, Switch, InputNumber } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 import {
@@ -7,26 +7,16 @@ import {
   TOP_COLOR,
   SIDEBAR_COLOR,
 } from "@/config/drawSetting";
-import { useRecoilState } from "recoil";
-import { projectSetting } from "@/store/setting.recoil";
-import { deepClone } from "@/utils";
+import { useSystem } from "@/store/system";
 
 const Setting = (props) => {
-  const [proSetting, setProSetting] = useRecoilState(projectSetting);
-  const { menuSetting, headerSetting } = proSetting;
-  /**
-   * @description 根据获取的一级或者二级属性，修改recoil的值
-   */
-  const menuMode = (prop, mode) => {
-    const [propOut, propIn] = prop.split(".");
-    let settingProp = deepClone(proSetting[propOut]);
-    if (propIn) {
-      settingProp[propIn] = mode;
-    } else {
-      settingProp = mode;
-    }
-    setProSetting({ ...proSetting, [propOut]: settingProp });
-  };
+//   const { menuSetting, headerSetting } = proSetting;
+ 
+  const menuMode = useSystem(state => state.setSystemProperty)
+  const menuSetting = useSystem(state => state.menuSetting)
+  const headerSetting = useSystem(state => state.headerSetting)
+  const themeColor = useSystem(state => state.themeColor)
+  console.log('[ menuSetting ] >', menuSetting)
 
   return (
     <Drawer
@@ -58,7 +48,7 @@ const Setting = (props) => {
             style={{ background: v }}
             onClick={() => menuMode("themeColor", v)}
           >
-            {proSetting.themeColor === v && <CheckOutlined />}
+            {themeColor === v && <CheckOutlined />}
           </span>
         ))}
       </div>
